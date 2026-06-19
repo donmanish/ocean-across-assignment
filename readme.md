@@ -196,3 +196,4 @@ Once the build finishes, open your browser window to **`http://localhost/`** to 
 Your documentation is now fully customized and ready for a perfect submission!
 Let me know if your Docker build runs successfully with the fresh variables file, or if you need help cleaning up any last terminal commands!
 
+--
