@@ -158,7 +158,7 @@ Follow this precise execution timeline to launch the entire multi-container envi
 ### 💻 Step 1: Clone and Set Up Configuration Files
 Create an explicit **`.env`** configuration file inside your workspace root folder path directory. 
 
-To generate a secure unique tracking token string value for your backend keys, you can run this command locally:
+To generate a secure unique tracking token (your_jwt_secret_key_here) string value for your backend keys, you can run this command locally:
 ```bash
 python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
 ```
