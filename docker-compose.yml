@@ -1,0 +1,61 @@
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: marketplace_db
+    env_file:
+      - .env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  backend:
+    build: ./backend
+    container_name: marketplace_backend
+    # Using $$ tells Docker Compose to treat it as a terminal command, not an environment variable
+    command: >
+      sh -c "python manage.py makemigrations &&
+             python manage.py migrate &&
+             python manage.py collectstatic --noinput &&
+             python manage.py runserver 0.0.0.0:8000"
+
+    volumes:
+      - ./backend:/app
+    env_file:
+      - .env
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+  frontend:
+    build: ./frontend
+    container_name: marketplace_frontend
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - VITE_API_URL=${VITE_API_URL}
+      - VITE_GOOGLE_CLIENT_ID=${OAUTH_CLIENT_ID}
+    networks:
+      - app-network
+
+  nginx:
+    build: ./nginx
+    container_name: marketplace_proxy
+    ports:
+      - "80:80"
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - app-network
+
+volumes:
+  postgres_data:
+
+networks:
+  app-network:
+    driver: bridge
