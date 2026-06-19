@@ -24,13 +24,40 @@ ocean-across-assignment/
 ## 📑 Project Overview & Architecture Blueprint
 The ecosystem is built using a modern decoupled layout strategy. Containers communicate natively through an Nginx Reverse Proxy stack network link.
 
+## Architecture Overview
 
-    [ React Browser App ] --------> ( Port 80: Nginx Proxy Router Gateway )
-    / 
-    ( Routes path: /api/v1/ ) / \ ( Routes path: / )
-    [ Django REST API Service ] [ Vite Node Web Server ]
-    |
-    [ PostgreSQL Database Volume ]
+The application follows a modern decoupled architecture where each service runs in its own container and communicates through an Nginx reverse proxy.
+
+### Components
+
+* **React Frontend** – Provides the user interface and runs using Vite.
+* **Nginx Reverse Proxy** – Serves as the single entry point for all incoming requests.
+* **Django REST API** – Handles business logic, authentication, and API operations.
+* **PostgreSQL Database** – Stores application data using a persistent Docker volume.
+
+### Request Routing
+
+* Requests to `/` are routed to the React frontend.
+* Requests to `/api/v1/` are routed to the Django REST API.
+
+### Request Flow
+
+1. The user accesses the application through a web browser.
+2. The request is received by the Nginx reverse proxy.
+3. Nginx forwards the request based on the URL path:
+
+   * `/` → React Frontend (Vite)
+   * `/api/v1/` → Django REST API
+4. The Django API communicates with PostgreSQL when database operations are required.
+5. The response is returned to the client through Nginx.
+
+
+### Benefits
+
+* Clear separation of frontend and backend responsibilities.
+* Independent scaling and deployment of services.
+* Improved maintainability through containerized architecture.
+* Secure and efficient inter-service communication through Docker networking.
 
 
 ### Core Architecture Components
@@ -40,6 +67,20 @@ The ecosystem is built using a modern decoupled layout strategy. Containers comm
 *   **Proxy System**: Nginx gateway proxy handling cross-origin requests securely.
 
 ---
+
+
+            Browser
+            |
+            v
+            Nginx Reverse Proxy
+            |--------------------|
+            |                    |
+            v                    v
+            React (Vite)      Django REST API
+                                    |
+                                    v
+                            PostgreSQL
+
 
 ## 📑 Class Design
 
