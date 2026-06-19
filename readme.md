@@ -117,9 +117,9 @@ The application follows a modern decoupled architecture where each service runs 
 
 ### class realtionship
 
-User ───► Session (1 : N)
-Session ───► Booking (1 : N)
-User ───► Booking (1 : N):
+    User ───► Session (1 : N)
+    Session ───► Booking (1 : N)
+    User ───► Booking (1 : N):
 
 
 
@@ -234,3 +234,91 @@ Once the build finishes, open your browser window to **`http://localhost/`** to 
 3.  **Account Management**: Click the profile dropdown menu item choice link box and go to **Account Settings**. Type a new username or upload a photo URL, click save, and your profile details will update immediately without a page reload.
 4.  **Mock Payment Gateway**: Go back home, select a session, and click **Book Now**. A secure payment checkout modal box will open on your layout screen. Type your mock card numbers, click confirm, and wait 2 seconds. The modal will verify your payment, mark the transaction as paid, and add the reservation to your **My Bookings** dashboard ledger.
 5.  **Supervisor Roles**: Open **`http://localhost/api/admin/`**, log into your user rows list, and switch your account role field text dropdown from `user` to **`creator`**. Go back to your app. The home path will instantly forward you to **`/creator-dashboard`** where you can use the form panel to publish new sessions, audit every user in the platform directory, and monitor all booking transactions globally without hitting any 429 rate limit locks!
+
+
+# 🚀 How to Run the Project Stack
+
+Follow this simple timeline to configure your local environment, launch all microservice containers, and run database migrations from scratch.
+
+---
+
+## 💻 Step 1: Create and Set Up Your `.env` File
+
+Open your main project root folder (`ocean-across-assignment/`). Create a brand new file named **`.env`** and paste these configuration variables inside it:
+
+```ini
+POSTGRES_DB=marketplace_db
+POSTGRES_USER=postgres_user
+POSTGRES_PASSWORD=your_secure_password_here
+POSTGRES_HOST=db
+POSTGRES_PORT=5432
+
+
+# --- Backend (Django) ---
+DJANGO_SECRET_KEY=django-insecure-%en*%0tj(a=(i858)==9#@=0jc7aw+ul*$okq@394z1xsdf7w9
+DJANGO_DEBUG=True
+DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,backend
+
+# --- JWT Settings ---
+JWT_SECRET_KEY=your_jwt_secret_key_here
+
+# --- OAuth Credentials (Google / GitHub) ---
+OAUTH_CLIENT_ID=your_oauth_client_id_here
+OAUTH_CLIENT_SECRET=your_oauth_client_secret_here
+
+# --- Frontend (Vite + React)---
+VITE_API_URL=http://localhost/api/v1/
+```
+
+---
+
+## 💻 Step 2: Build and Run with Docker Compose
+
+Open your system terminal window, navigate directly to your root project folder, and execute this orchestration pipeline:
+
+```bash
+# 1. Stop any loose or old active container layers
+docker-compose down -v
+
+# 2. Build and boot up Nginx, React, and Django containers together
+docker-compose up --build -d
+```
+
+---
+
+## 💻 Step 3: Initialize the PostgreSQL Database Schema
+
+Here you have to create admin where you can test booking, sessions and users
+
+```bash
+# Create your master admin account to manually switch user roles later
+docker exec -it marketplace_backend python manage.py createsuperuser
+```
+
+---
+
+## 💻 Step 4: Optional - Restore Pre-existing Mock Data
+
+If you have a database data snapshot saved in a `backup.sql` file and want to instantly load your test users and training sessions, run this restore command:
+
+```bash
+docker exec -i marketplace_db psql -U postgres_user -d marketplace_db < backup.sql
+```
+
+---
+
+## 🚀 Open Your Browser and Test
+
+Everything is now fully deployed and communicating smoothly over your localized network layout layers! Open your web browser and go to:
+* **`http://localhost/`**
+
+`http://localhost/` for react
+`http://localhost/api/admin` for django inbuild admin (which is for test)
+
+## avtar url can find here
+https://pravatar.cc/
+
+
+
+
+
